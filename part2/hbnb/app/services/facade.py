@@ -2,6 +2,7 @@ from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
+from app.models.review import Review
 
 
 class HBnBFacade:
@@ -89,7 +90,7 @@ class HBnBFacade:
         owner_id = place_data.get("owner_id")
         if owner_id:
             if not self.user_repo.get(owner_id):
-                raise LookupError(f"Owner id not found: {owner_id}")
+                raise LookupError(f"Owner is not found: {owner_id}")
         # AMENITY EXTRACT:
         amenities_ids = place_data.pop("amenities", None)
         # PLACE CREATION:
@@ -102,6 +103,7 @@ class HBnBFacade:
                 else:
                     # CHECK AMENITY ID
                     raise LookupError(f"Amenity id not found:{element}")
+        # SAVE PLACE
         self.place_repo.add(place)
         return place
 
@@ -129,3 +131,43 @@ class HBnBFacade:
                     "-180 and 180"
                 )
         return self.place_repo.update(place_id, place_data)
+
+# --- REVIEW CRUD -------------------------------------
+
+    def create_review(self, review_data):
+        # RATING VALUE VALIDATION:
+        if not 0 <= review_data['rating'] <= 5:
+            raise ValueError("Bad request: rating must be between 0 and 5")
+        # USER ID VERIFICATION:
+        user_id = review_data['user_id']
+        if not self.user_repo.get(user_id):
+            raise LookupError(f"Owner id not found: {user_id}")
+        # PLACE ID VERIFICATION:
+        place_id = review_data['place_id']
+        if not self.place_repo.get(place_id):
+            raise LookupError(f"Place id not found: {place_id}")
+        # REVIEW CREATION:
+        review = Review(**review_data)
+        # REVIEW SAVING:
+        self.review_repo.add(review)
+        return review
+
+    def get_review(self, review_id):
+        # Placeholder for logic to retrieve a review by ID
+        pass
+
+    def get_all_reviews(self):
+        # Placeholder for logic to retrieve all reviews
+        return self.review_repo.get_all()
+
+    def get_reviews_by_place(self, place_id):
+        # Placeholder for logic to retrieve all reviews for a specific place
+        pass
+
+    def update_review(self, review_id, review_data):
+        # Placeholder for logic to update a review
+        pass
+
+    def delete_review(self, review_id):
+        # Placeholder for logic to delete a review
+        pass

@@ -169,8 +169,7 @@ class HBnBFacade:
         if "comment" in review_data:
             if not isinstance(review_data["comment"], str):
                 raise ValueError("Bad request: comment must be a string")
-        self.review_repo.update(review_id, review_data)
+        return self.review_repo.update(review_id, review_data)
 
     def delete_review(self, review_id):
-        # Placeholder for logic to delete a review
-        pass
+        return self.review_repo.delete(review_id)

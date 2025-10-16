@@ -153,11 +153,9 @@ class HBnBFacade:
         return review
 
     def get_review(self, review_id):
-        # Placeholder for logic to retrieve a review by ID
-        pass
+        return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
-        # Placeholder for logic to retrieve all reviews
         return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
@@ -165,8 +163,13 @@ class HBnBFacade:
         pass
 
     def update_review(self, review_id, review_data):
-        # Placeholder for logic to update a review
-        pass
+        if "rating" in review_data:
+            if not 0 <= review_data['rating'] <= 5:
+                raise ValueError("Bad request: rating must be between 0 and 5")
+        if "comment" in review_data:
+            if not isinstance(review_data["comment"], str):
+                raise ValueError("Bad request: comment must be a string")
+        self.review_repo.update(review_id, review_data)
 
     def delete_review(self, review_id):
         # Placeholder for logic to delete a review

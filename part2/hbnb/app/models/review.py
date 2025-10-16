@@ -2,12 +2,20 @@ from .base import BaseModel
 
 
 class Review(BaseModel):
-    def __init__(self, comment, rating, place, owner):
+    def __init__(self, comment, rating, place_id, owner_id):
         super().__init__()
         self.comment = comment
         self.rating = rating
-        self.place = place
-        self.user = owner
+        self.place_id = place_id
+        self.owner_id = owner_id
+
+    def to_dict(self):
+        return {
+            "comment": self.comment,
+            "rating": self.rating,
+            "place_id": self.place_id,
+            "owner_id": self.owner_id
+        }
 
 # # SETTER/GETTER
 # #   COMMENT

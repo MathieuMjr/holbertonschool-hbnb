@@ -54,25 +54,31 @@ class HBnBFacade:
 # --- AMENITY CRUD ----------------------------------
 
     def create_amenity(self, amenity_data):
+        """Create an amenity"""
         amenity = Amenity(**amenity_data)
         self.amenity_repo.add(amenity)
         return amenity
 
     def get_amenity(self, amenity_id):
+        """Get an amenity by its ID"""
         return self.amenity_repo.get(amenity_id)
 
     def get_all_amenities(self):
+        """Get all amenities"""
         return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
+        """Update a specific amenity"""
         return self.amenity_repo.update(amenity_id, amenity_data)
 
     def get_by_attribute(self, attr_name, attr_value):
+        """get an amenity by a specific attribute value"""
         return self.amenity_repo.get_by_attribute(attr_name, attr_value)
 
 # --- PLACE CRUD ------------------------------------
 
     def create_place(self, place_data):
+        """ Create a place"""
         # VALUES VALIDATIONS:
         if place_data["price"] <= 0:
             raise ValueError(
@@ -108,12 +114,15 @@ class HBnBFacade:
         return place
 
     def get_place(self, place_id):
+        """Get a place by its ID"""
         return self.place_repo.get(place_id)
 
     def get_all_places(self):
+        """Get all places"""
         return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
+        """Update a place"""
         if "price" in place_data:
             if place_data["price"] <= 0:
                 raise ValueError(
@@ -135,6 +144,8 @@ class HBnBFacade:
 # --- REVIEW CRUD -------------------------------------
 
     def create_review(self, review_data):
+        """ Create a review and add it to the place
+        its linked to"""
         # RATING VALUE VALIDATION:
         if not 0 <= review_data['rating'] <= 5:
             raise ValueError("Bad request: rating must be between 0 and 5")
@@ -144,25 +155,35 @@ class HBnBFacade:
             raise LookupError(f"Owner id not found: {user_id}")
         # PLACE ID VERIFICATION:
         place_id = review_data['place_id']
-        if not self.place_repo.get(place_id):
+        place = self.place_repo.get(place_id)
+        if not place:
             raise LookupError(f"Place id not found: {place_id}")
         # REVIEW CREATION:
         review = Review(**review_data)
+        # ADDING REVIEW TO THE PLACE:
+        place.add_review(review.id)
         # REVIEW SAVING:
         self.review_repo.add(review)
         return review
 
     def get_review(self, review_id):
+        """Get a review by its ID"""
         return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
+        """Get all reviews"""
         return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        # Placeholder for logic to retrieve all reviews for a specific place
+        # made directly in API - since it's 00h
+        # I don't fix it now
         pass
 
     def update_review(self, review_id, review_data):
+        """Update a review
+        - review's id is needed so we know which review to update
+        - datas to update are needed
+        """
         if "rating" in review_data:
             if not 0 <= review_data['rating'] <= 5:
                 raise ValueError("Bad request: rating must be between 0 and 5")
@@ -172,4 +193,5 @@ class HBnBFacade:
         return self.review_repo.update(review_id, review_data)
 
     def delete_review(self, review_id):
+        """ Delete a review"""
         return self.review_repo.delete(review_id)

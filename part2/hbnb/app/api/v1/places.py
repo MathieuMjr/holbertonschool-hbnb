@@ -16,19 +16,29 @@ user_model = api.model('PlaceUser', {
     'email': fields.String(description='Email of the owner')
 })
 
+review_model = api.model('PlaceReview', {
+    'id': fields.String(description='Review ID'),
+    'text': fields.String(description='Text of the review'),
+    'rating': fields.Integer(description='Rating of the place (1-5)'),
+    'user_id': fields.String(description='ID of the user')
+})
+
 # Define the place model for input validation and documentation
 place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
     'price': fields.Float(required=True, description='Price per night'),
-    'latitude': fields.Float(required=True,
-                             description='Latitude of the place'),
-    'longitude': fields.Float(required=True,
-                              description='Longitude of the place'),
+    'latitude': fields.Float(
+        required=True, description='Latitude of the place'),
+    'longitude': fields.Float(
+        required=True, description='Longitude of the place'),
     'owner_id': fields.String(required=True, description='ID of the owner'),
-    'amenities': fields.List(fields.String, required=False,
-                             description="List of amenities ID's")
-})
+    'owner': fields.Nested(user_model, description='Owner of the place'),
+    'amenities': fields.List(
+        fields.String, description='List of amenity IDs'),
+    'reviews': fields.List(
+        fields.String, description='List of review IDs')
+    })
 
 
 @api.route('/')
@@ -79,7 +89,9 @@ class PlaceResource(Resource):
             "owner": facade.get_user(place.owner_id).to_dict(),
             "amenities":
             [facade.get_amenity(element).to_dict()
-             for element in place.amenities]
+             for element in place.amenities],
+            "reviews": [facade.get_review(element).to_dict()
+                        for element in place.reviews]
         }, 200
 
     @api.expect(place_model)
@@ -98,3 +110,23 @@ class PlaceResource(Resource):
             return {"message": "Place updated successfully"}, 200
         except ValueError as e:
             return {"error": str(e)}, 400
+
+
+@api.route('/<place_id>/reviews')
+class PlaceReviewList(Resource):
+    @api.response(200, 'List of reviews for the place retrieved successfully')
+    @api.response(404, 'Place not found')
+    def get(self, place_id):
+        """Get all reviews for a specific place"""
+        # Placeholder for logic to return a list of reviews for a place
+        place = facade.get_place(place_id)
+        if not place:
+            return {"error": "Place not found"}
+        place_reviews_list = place.reviews
+        new_list = []
+        for element in place_reviews_list:
+            review = facade.get_review(element)
+            new_list.append({"id": review.id,
+                             "comment": review.comment,
+                             "rating": review.rating})
+        return new_list, 200

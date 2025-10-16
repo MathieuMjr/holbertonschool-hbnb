@@ -19,8 +19,7 @@ user_model = api.model('User', {
 class UserCreate(Resource):
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
-    @api.response(400, 'Email already registered')
-    @api.response(400, 'Invalid input data')
+    @api.response(400, 'Email already registered or invalid input data')
     def post(self):
         """Register a new user"""
         user_data = api.payload
@@ -39,6 +38,18 @@ class UserCreate(Resource):
             'last_name': new_user.last_name,
             'email': new_user.email
             }, 201
+
+    @api.response(200, 'OK')
+    def get(self):
+        """
+        This function responsible for
+        fetching all users informations
+        """
+        users = facade.get_all()
+        new_list = []
+        for element in users:
+            new_list.append(element.to_dict())
+        return new_list
 
 
 @api.route('/<user_id>')
@@ -59,9 +70,6 @@ class UserResource(Resource):
             'email': user.email
             }, 200
 
-
-@api.route('/<user_id>')
-class UserUpdate(Resource):
     @api.response(200, "OK")
     @api.response(404, "Not Found")
     @api.response(400, 'Bad Request')
@@ -79,18 +87,3 @@ class UserUpdate(Resource):
             return {"error": "Email already exist"}, 400
         facade.update(user_id, update_datas)
         return user.to_dict()
-
-
-@api.route('/')
-class UserList(Resource):
-    @api.response(200, 'OK')
-    def get(self):
-        """
-        This function responsible for
-        fetching all users informations
-        """
-        users = facade.get_all()
-        new_list = []
-        for element in users:
-            new_list.append(element.to_dict())
-        return new_list

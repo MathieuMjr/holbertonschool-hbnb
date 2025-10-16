@@ -6,22 +6,33 @@ This module contains a representation of Place to rent
 
 class Place(BaseModel):
     def __init__(
-            self, title, description, price, latitude, longitude, owner):
+            self, title, description, price, latitude, longitude, owner_id):
         super().__init__()
         self.title = title
         self.description = description
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner  # owner id
+        self.owner_id = owner_id  # owner id
         self.amenities = []  # stores list of amenities
         self.reviews = []  # stores list of reviews
 
     def add_review(self, review):
         self.reviews.append(review)
 
-    def add_amenity(self, amenity):
-        self.amenities.append(amenity)
+    def add_amenity(self, amenity_id):
+        self.amenities.append(amenity_id)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "price": self.price,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "owner_id": self.owner_id
+        }
 
 # # SETTERS / GETTERS
 
@@ -45,11 +56,13 @@ class Place(BaseModel):
 
 #     @description.setter
 #     def description(self, value):
-#         if isinstance(value, str) and len(value) >= 150 and len(value) <= 350:
+#         if isinstance(value, str)
+#           and len(value) >= 150 and len(value) <= 350:
 #             self._description = value
 #         else:
 #             raise ValueError(
-#                 "Description must be a string between 150 and 350 characters")
+#                 "Description must be a string
+#                   between 150 and 350 characters")
 
 #     # PRICE
 #     @property
@@ -85,7 +98,8 @@ class Place(BaseModel):
 #         if isinstance(value, float) and value >= -180 and value <= 180:
 #             self._longitude = value
 #         else:
-#             raise ValueError("longitude must be a float between -180 and 180")
+#             raise ValueError(
+#   "longitude must be a float between -180 and 180")
 
 #     # OWNER
 #     @property

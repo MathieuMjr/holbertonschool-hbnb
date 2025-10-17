@@ -18,6 +18,7 @@ class ReviewList(Resource):
     @api.expect(review_model, validate=True)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
+    @api.response(404, 'ID not found')
     def post(self):
         """Register a new review"""
         datas = api.payload
@@ -25,6 +26,8 @@ class ReviewList(Resource):
             review = facade.create_review(datas)
         except ValueError as e:
             return {"error": str(e)}, 400
+        except LookupError as e:
+            return {"error": str(e)}, 404
         if not review:
             return {"error": "Invalid input data"}, 400
         return review.to_dict(), 201

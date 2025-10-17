@@ -27,6 +27,8 @@ class UserCreate(Resource):
 
         # Simulate email uniqueness check
         # (to be replaced by real validation with persistence)
+        if "@" not in user_data['email']:
+            return {"error": "Invalid input data: @ char is missing"}
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400

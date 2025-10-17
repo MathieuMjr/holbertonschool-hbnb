@@ -14,6 +14,7 @@ class AmenityCreate(Resource):
     @api.expect(amenity_model, validate=True)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
+    @api.response(409, 'Ressource already exist')
     def post(self):
         """Register a new amenity"""
         data = api.payload
@@ -49,13 +50,15 @@ class AmenityResource(Resource):
     @api.response(200, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
-    # ajouter un conflit avec une amenité existante
-    # api.response(409, '')  + test dans def put
+    @api.response(409, 'Name already exist')
     def put(self, amenity_id):  # paramètre de la route
         """Update an amenity's information"""
         data = api.payload
         if "name" not in data or data["name"] == "":
             return {"error": "Invalid input data"}, 400
+        existing_amenity = facade.get_by_attribute("name", data['name'])
+        if existing_amenity:
+            return {"error": "amenity already exist"}, 409
         amenity = facade.get_amenity(amenity_id)
         if not amenity:
             return {"error": "Amenity not found"}, 404

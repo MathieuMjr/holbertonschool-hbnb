@@ -121,7 +121,7 @@ class PlaceReviewList(Resource):
         # Placeholder for logic to return a list of reviews for a place
         place = facade.get_place(place_id)
         if not place:
-            return {"error": "Place not found"}
+            return {"error": "Place not found"}, 404
         place_reviews_list = place.reviews
         new_list = []
         for element in place_reviews_list:

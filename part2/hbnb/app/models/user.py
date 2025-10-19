@@ -10,6 +10,8 @@ class User(BaseModel):
         self.is_admin = is_admin
         self.places = []  # List to store related places
 
+    # method to add a place
+
     def to_dict(self):
         """
         This function allow to display some specific attribute of user.

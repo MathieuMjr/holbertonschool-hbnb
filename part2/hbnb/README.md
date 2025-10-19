@@ -76,7 +76,7 @@ Notice:
 |**User** | `first_name` (str),<br> `last_name` (str),<br> `email` (str),<br> `is_admin` (bool),<br> `places` (list[ids]) | **POST** `/users` - create user<br> **GET** `/users` - all users<br> **GET** `/users/<user_id>` - get user by id <br>**PUT** `/users/<user_id>` update a user | /
 |**Place** | `title` (str),<br> `description` (str), <br> `price` (float),<br> `latitude` (float),<br> `longitude` (float),<br> `owner_id` (str(UUID))| **POST** `/places` - create place<br> **GET** `/places` - all places<br> **GET** `/places/<place_id>` - get place by id <br>**GET** `/places/<place_id>/reviews` - get all reviews of a place <br>**PUT** `/places/<place_id>` update a place | add_review(review_id),<br> add_amenity(amenity_id)
 |**Amenity** | `name`(str) | **POST** `/amenities` - create amenity<br> **GET** `/amenities` - all amenities<br> **GET** `/amenities/<amenity_id>` - get amenity by id <br>**PUT** `/amenities/<amenity_id>` update  amenity | /
-| **Review** | `comment` (str), <br> `rating` int, <br>`place_id` (str(UUID)), <br> `user_id` (str(UUID)) | **POST** `/reviews` - create amenity<br> **GET** `/reviews` - all amenities<br> **GET** `/reviews/<review_id>` - get amenity by id <br>**PUT** `/reviews/<review_id>` update  amenity | /
+| **Review** | `comment` (str), <br> `rating` int, <br>`place_id` (str(UUID)), <br> `user_id` (str(UUID)) | **POST** `/reviews` - create review<br> **GET** `/reviews` - all reviews<br> **GET** `/reviews/<review_id>` - get review by id <br>**PUT** `/reviews/<review_id>` update  review<br> **DELETE** `/reviews/<review_id>` - delete review| /
 
 ## HOW TO USE IT:
 

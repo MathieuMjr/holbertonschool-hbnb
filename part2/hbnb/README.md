@@ -57,7 +57,7 @@ API  -->  FACADE  -->  REPOSITORY/MODELS
 API calls for facade function to fulfill requests. Facade functions orchestrate function calls to MODELS or REPOSITORY according to the requests. 
 
 Repository methods are related to objects storage and retrieving. 
-Models methods are in charge to create object and update them. Although, update method from models is called by a repository
+Models methods are in charge to create object and update them. Although, update method from models is called by a repository method.
 
 
 

@@ -3,7 +3,7 @@
 HBNB project's purpose is to build an AirBNB clone on my own from scratch, but guided through the different steps thanks to Holberton School curriculus. 
 
 ## 1. Technical documentation and UML diagrams 
-Files reated to this part can be found in the `part1` directory.
+Files related to this part can be found in the `part1` directory.
 
 In order to anticipate our coding, we were asked to get familiar with 3 types of UML diagrams : 
 - `Highlevel package diagram`
@@ -11,5 +11,13 @@ In order to anticipate our coding, we were asked to get familiar with 3 types of
 - `Sequence diagrams`
 
 Those three diagrams constitute the technical documentation, informing users about the architecture layers and their depending relations (`package diagram`), class models and their relations (`class diagrams`) and sequences of layers interactions (`sequence diagrams`) in 4 scenarios : user registration, place creation, review submission and list of places request. 
+
+## 2. Implementing business logic core and API Endpoint :
+Part 2 contains files written to implement businees logic core and API endpoint with the facade design architecture. 
+A specific readme explain how it works. 
+
+Four object have been created : user, place, amenity, review. All inherit from a base model. 
+
+API routes handle the CRUDS operations (except DELETE operations that only review object can handle) and return the apropriate status code. 
 
 ## Work is still in progress, more content will come as the project goes further o/ 

@@ -37,7 +37,7 @@ All the following commands must be executed from `part2/hbnb` directory
 |--|--|
 |V env creation | `python3 -m venv venv`
 |V env activation | `source venv/bin/activate`
-|Modules installation | `pip -r requirements.txt` `VALIDER LA REDACTION DU REQUIREMENTS.TXT`
+|Modules installation | `pip -r requirements.txt`
 
 \
 You should have `(venv)` written at the very beginning of your line commands if it has been activated successfully. 

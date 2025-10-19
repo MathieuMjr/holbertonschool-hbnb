@@ -80,19 +80,22 @@ Notice:
 
 ## HOW TO USE IT:
 
-**Running the API:**
+### Running the API:
 
 Use the following command to start the application :
 > python run.py
 
-**Sending HTTP methods**
+### Sending HTTP methods:
 
-Here are some example of request you can make to the API using `Curl`
+Here are some example of request you can make to the API using `Curl` and the data send in response when the request succeed. 
 
 `user creation`: 
 > curl -X POST http://localhost:5000/api/v1/users/ -H "Content-Type: application/json" -d '{"first_name": "John", "last_name": "Doe", "email": "john.doe@example.com"}'
 
 Keep the user ID from the JSON response to create a place that he owns.
+
+**JSON response:**
+> {"id" : <`user_id`>, "first_name": "John", "last_name": "Doe", "email": "john.doe@example.com"}
 
 `amenities creation`:
 > curl -X POST http://localhost:5000/api/v1/amenities/ -H "Content-Type: application/json" -d '{"name": "Wi-Fi"}'
@@ -101,14 +104,23 @@ Keep the user ID from the JSON response to create a place that he owns.
 
 Keep the IDs so you can use them to create a place - notice amenities are optional to create a place.
 
+**JSON response:**
+> {"id" : <`amenity_id`>, "name": "Pool"}
+
 `place creation` - once you've created a user, use its ID from the json response:
 >  curl -X POST http://localhost:5000/api/v1/places/
 -H "Content-Type: application/json" -d '{"title": "Cozy Apartment", "description": "A nice place to stay", "price": 100.0, "latitude": 37.7749, "longitude": -122.4194, "owner_id": "`<owner id>`", "amenities": ["`<amenity_id>`", "`<amenity_id>`"]}'
 
-Keep the place ID from the JSON response so you can use it in review creation. 
+Keep the place ID from the JSON response so you can use it in review creation.
+
+**JSON response:**
+> {"id" : <`amenity_id`>, "title": "Cozy Apartment", "description": "A nice place to stay", "price": 100.0, "latitude": 37.7749, "longitude": -122.4194, "owner_id": "`<owner id>`", "amenities": ["`<amenity_id>`", "`<amenity_id>`"]}
 
 `review creation`
 > curl -X POST http://localhost:5000/api/v1/reviews/ -H "Content-Type: application/json" -d '{"comment": "Great place to stay!", "rating": 5, "user_id": "`<user_id>`", "place_id": "`<place_id>`"}'
+
+**JSON response:**
+{"id" : <`amenity_id`>, "comment": "Great place to stay!", "rating": 5, "user_id": "`<user_id>`", "place_id": "`<place_id>`"}
 
 `more requests`
 
@@ -118,11 +130,30 @@ For more request, you can refer to the api routes in the `supported features` se
 
 for POST requests :
 
-> curl -X POST http://localhost:5000<`api.route`> -H "Content-Type: application/json" -d '{`<required values>`}
+> curl -X POST http://localhost:5000<`api.route`> -H "Content-Type: application/json" -d '{`<required values for object creation>`}
 
 for PUT requests: 
 
-> curl -X PUT http://localhost:5000<`api.route`> -H "Content-Type: application/json" -d '{`<update values>`}
+> curl -X PUT http://localhost:5000<`api.route`> -H "Content-Type: application/json" -d '{`<values to update>`}
 
 **Status code** 
 
+Here is a quick recap of the different status code you should get in return :
+
+| HTTP Method | Status code
+|--|--|
+|**POST**| `201` object successfully created<br> `400` Invalid input data - an attribute value is out of range or wrong type <br> `404` Not found - the object ID you've indicated refer to an unexisting object
+| **GET** | `200` object(s) successfully retrieved <br> `404` object not found - ID must be wrong
+| **PUT** | `200` object successfully updated <br> `400` Invalid input data - an attribute value is out of range or wrong type <br> `404` Object not found - the object to udpate ID refers to an unexisting object <br> `409` Conflict with another existing object
+
+## TESTS AND VALIDATION
+
+In the test directory, four files performs unittest of a bunch of HTTP methods adn their returns. 
+
+You can run the tests with the following command, launched from the `/part2/hbnb` repository :
+> pytest -v
+
+The `-v` option will give details on the test performed : normal creation, creation with wrong value, get with wrong ID, etc. 
+
+## AUTHOR:
+Mathieu Majérus

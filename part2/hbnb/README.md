@@ -1,22 +1,22 @@
 # HBNB PART 2 - API / BUSINESS LOGIC / TESTING & DEBUGGING
 
 ## INTRODUCTION
-In this part 2 of the HBNB project, we were asked to implement de business logic and API of our AirBNB-like application :
+In this part 2 of the HBNB project, we were asked to implement the business logic and API of our AirBNB-like application :
 - Core business logic
 - API endpoints
 - Tests and validations with UNITTEST
 
-The files in this repos will show you my work on thoses aspects, on the basis of the file organisation and some files contents (__init__ files, repository...) given by Holberton School.
-Feel free to visit this repo if you want to take a look at this work basis : https://github.com/Holberton-Uy/hbnb-doc/tree/main/part2
+The files in this repos will show you my work on those aspects, on the basis of the file organization and some files contents (__init__ files, repository...) given by Holberton School.
+Feel free to visit this repo if you want to take a look at the base template provided : https://github.com/Holberton-Uy/hbnb-doc/tree/main/part2
 
 
-## REQUIEREMENTS: 
+## REQUIREMENTS: 
 
 The following instruction will help you to install this app on your computer. 
 
 **System:**
 
-This app was built from Ubuntu. 
+This app was built on Ubuntu. 
 
 **Cloning the repository:**
 
@@ -28,7 +28,7 @@ Don't forget to go in the proper directory before going further :
 
 **Virtual environnement**
 
-Some modules requieres the creation of a virtual environement. Here are the steps to follow in order to install your virtual environnement. 
+Some modules requires the creation of a virtual environement. Here are the steps to follow in order to install your virtual environnement. 
 
 All the following commands must be executed from `part2/hbnb` directory
 
@@ -37,7 +37,7 @@ All the following commands must be executed from `part2/hbnb` directory
 |--|--|
 |V env creation | `python3 -m venv venv`
 |V env activation | `source venv/bin/activate`
-|Modules installation | `pip -r requirements.txt` `VALIDER LA REDACTION DU REQUIEREMENTS.TXT`
+|Modules installation | `pip -r requirements.txt` `VALIDER LA REDACTION DU REQUIREMENTS.TXT`
 
 \
 You should have `(venv)` written at the very beginning of your line commands if it has been activated successfully. 
@@ -50,7 +50,7 @@ If you need to install on your own the required modules, here are the versions u
 | Flask-restx | 1.3.2
 
 ## ARCHITECTURE DESIGN:
-The project use the **facade pattern** :
+The project uses the **facade pattern** :
 
 API  -->  FACADE  -->  REPOSITORY/MODELS
 
@@ -63,11 +63,11 @@ Models methods are in charge to create object and update them. Although, update 
 
 ## SUPPORTED FEATURES:
 
-Since this is a simple version of AirBNB with the purpose to practice alone and in a limited amount of time, not everything is perfect and some HTTP methods are not handled yet as well as some attributes and objects are missing.
+Since this is a simple version of AirBNB with the purpose to practice alone and in a limited amount of time, some features are intentionally simplified due to time constraints.
 
 Notice: 
 -  `DELETE` HTTP methods are not handled except for `reviews`.
-- All object inherits from Base Model
+- All objects inherit from Base Model
 
 
 | MODELS OBJECTS | ATTRIBUTES | API ENDPOINTS | METHODS |
@@ -87,7 +87,7 @@ Use the following command to start the application :
 
 ### Sending HTTP methods:
 
-Here are some example of request you can make to the API using `Curl` and the data send in response when the request succeed. 
+Here are some example of requests you can make to the API using `Curl` and the data send in response when the request succeed. 
 
 `user creation`: 
 > curl -X POST http://localhost:5000/api/v1/users/ -H "Content-Type: application/json" -d '{"first_name": "John", "last_name": "Doe", "email": "john.doe@example.com"}'
@@ -122,7 +122,7 @@ Keep the place ID from the JSON response so you can use it in review creation.
 **JSON response:**
 {"id" : <`amenity_id`>, "comment": "Great place to stay!", "rating": 5, "user_id": "`<user_id>`", "place_id": "`<place_id>`"}
 
-`more requests`
+`More requests`
 
 For more request, you can refer to the api routes in the `supported features` section up above. Then, here is the syntax to use for a get request :
 

@@ -58,6 +58,7 @@ class PlaceList(Resource):
             return {"error": str(e)}, 400
         if not place:
             return {"error": "Invalid input data"}, 400
+        # need to add the place to the owner list
         return place.to_dict(), 201
 
     @api.response(200, 'List of places retrieved successfully')

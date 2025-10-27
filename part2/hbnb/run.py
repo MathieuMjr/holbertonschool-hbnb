@@ -8,5 +8,5 @@ if __name__ == '__main__':
     # import à faire : import config
     # on pourra alors faire app.run(config['development'])
     # par exemple, qui appellera une instance de la classe
-    # configdevelopement via le dictionnaire config du 
+    # configdevelopement via le dictionnaire config du
     # dossier config.py

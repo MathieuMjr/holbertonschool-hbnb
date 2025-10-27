@@ -6,8 +6,18 @@ from app.api.v1.places import api as places_ns
 from app.api.v1.reviews import api as reviews_ns
 
 
-def create_app():
+def create_app(config_class="config.DevelopmentConfig"):
+    # la string de config_class sera comprise comme un import
+    # d'un objt de type developmentconfig depuis le fichier config
+    # ici on ne fait que définir la fonction ; c'est dans run.py
+    # qu'on l'appelera et qu'on indiquera quelle config lancer
     app = Flask(__name__)
+    app.config.from_object(config_class)
+    # config est un attribut de app :
+    # un dictionnaire qui contient qui contient des clé
+    # genre debug, etc. auxquelles on transmet les valeurs
+    # via nos classes de config qui seront accessibles par
+    # toutes les extension
     api = Api(
         app, version='1.0',
         title='HBnB API',

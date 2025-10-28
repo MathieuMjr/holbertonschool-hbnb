@@ -18,7 +18,8 @@ class HBnBFacade:
         This function create a new
         And save it in the repo
         """
-        user = User(**user_data)  # method from class User in models
+        user = User(**user_data)
+        user.hash_password(user.password)  # method from class User in models
         self.user_repo.add(user)  # method from repository class in persistence
         return user
 

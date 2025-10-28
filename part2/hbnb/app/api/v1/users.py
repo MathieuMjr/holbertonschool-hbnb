@@ -1,5 +1,9 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from werkzeug.security import generate_password_hash, check_password_hash
 
 api = Namespace('users', description='User operations')
 
@@ -10,10 +14,13 @@ user_model = api.model('User', {
     'last_name': fields.String(
         required=True, description='Last name of the user'),
     'email': fields.String(
-        required=True, description='Email of the user')
-    # ajouter un champs password à l'avenir
+        required=True, description='Email of the user'),
+    'password': fields.String(
+        required=True, description='Password of the user')
 })
 
+# penser à limiter les requêtes (rate limite)
+# sur le login et sign in
 
 @api.route('/')
 class UserCreate(Resource):
@@ -24,15 +31,18 @@ class UserCreate(Resource):
         """Register a new user"""
         user_data = api.payload
         # hasher le password ici
+        password = user_data['password']
+        user_data['password'] = generate_password_hash(password)
+        password = ""
 
         # Simulate email uniqueness check
         # (to be replaced by real validation with persistence)
         if "@" not in user_data['email']:
             return {"error": "Invalid input data: @ char is missing"}, 400
         if user_data['first_name'] == "":
-            return {"error": "Invalid input data: empty string"}
+            return {"error": "Invalid input data: empty string"}, 400
         if user_data['last_name'] == "":
-            return {"error": "Invalid input data: empty string"}
+            return {"error": "Invalid input data: empty string"}, 400
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400

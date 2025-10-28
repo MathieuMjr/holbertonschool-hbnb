@@ -5,6 +5,7 @@ from app.api.v1.amenities import api as amenities_ns
 from app.api.v1.places import api as places_ns
 from app.api.v1.reviews import api as reviews_ns
 from flask_jwt_extended import JWTManager
+from app.extensions import bcrypt
 
 
 def create_app(config_class="config.DevelopmentConfig"):
@@ -13,6 +14,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     # ici on ne fait que définir la fonction ; c'est dans run.py
     # qu'on l'appelera et qu'on indiquera quelle config lancer
     app = Flask(__name__)
+    bcrypt.init_app(app)
     app.config.from_object(config_class)
     # config est un attribut de app :
     # un dictionnaire qui contient qui contient des clé

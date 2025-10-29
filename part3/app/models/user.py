@@ -11,6 +11,11 @@ class User(BaseModel):
         self.is_admin = is_admin
         self.password = password
         self.places = []  # List to store related places
+        self.reviews = []
+
+    def add_review(self, review):
+        """Add a review to the place."""
+        self.reviews.append(review)
 
     def add_place(self, place_id):
         self.places.append(place_id)
@@ -26,7 +31,8 @@ class User(BaseModel):
             "first_name": self.first_name,
             "email": self.email,
             "is_admin": self.is_admin,
-            "places": self.places
+            "places": self.places,
+            "reviews": self.reviews
             }
 
     def hash_password(self, password):

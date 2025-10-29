@@ -119,7 +119,7 @@ class PlaceResource(Resource):
         datas = api.payload
         place = facade.get_place(place_id)  # return a place object
         if current_user['id'] != place.owner_id and not current_user['role']:
-            return {"error": "Unauthorized action"}, 403
+            return {"error": "Unauthorized action: you are not the place owner"}, 403
         if not place:
             return {"error": "Place not found"}, 404
         try:

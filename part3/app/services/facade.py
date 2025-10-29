@@ -3,6 +3,7 @@ from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
+from flask_jwt_extended import get_jwt_identity, get_jwt
 
 
 class HBnBFacade:
@@ -11,6 +12,13 @@ class HBnBFacade:
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
+
+# --- TOKEN IDENTITY
+    @staticmethod
+    def get_token_identity():
+        identity = get_jwt_identity()
+        claims = get_jwt()
+        return {"id": identity, "role": claims.get("is_admin", False)}
 
 # --- USER CRUD ----------------------------------
     def create_user(self, user_data):

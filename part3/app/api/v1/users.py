@@ -1,6 +1,5 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
 api = Namespace('users', description='User operations')
@@ -35,7 +34,6 @@ class UserCreate(Resource):
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
-
         new_user = facade.create_user(user_data)
         return {
             'id': new_user.id,
@@ -76,20 +74,33 @@ class UserResource(Resource):
             'places': user.places
             }, 200
 
+    @jwt_required()
     @api.response(200, "OK")
     @api.response(404, "Not Found")
     @api.response(400, 'Bad Request')
+    @api.response(403, 'Unauthorized action')
     def put(self, user_id):
         """
         This method in charge of modifying user's
         informations
         """
+        # fetch token identity
+        current_user = facade.get_token_identity()
+        # fetch payload
         update_datas = api.payload
+        if 'email' in update_datas or 'password' in update_datas:
+            return {'error': 'You cannot modify email or password.'}, 400
+        # check authorization :
+        if current_user['id'] != user_id:
+            return {"error": "Unauthorized action"}, 403
+        # rebuild the user
         user = facade.get_user(user_id)
         if not user:
             return {"error": "Not found"}, 404
-        user_mail = facade.get_user_by_email(update_datas['email'])
-        if user_mail and user_mail.id != user_id:
-            return {"error": "Email already exist"}, 400
+        # check if is trying to update with an existing email
+        # user_mail = facade.get_user_by_email(update_datas['email'])
+        # if user_mail and user_mail.id != user_id:
+        #     return {"error": "Email already exist"}, 400
+        # update
         facade.update(user_id, update_datas)
         return user.to_dict()

@@ -1,9 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from app.extensions import bcrypt
 
 api = Namespace('users', description='User operations')
 
@@ -19,33 +17,6 @@ user_model = api.model('User', {
         required=True, description='Password of the user')
 })
 
-user_authentification = api.model('User', {
-    'email': fields.String(
-        required=True, description='Email of the user'),
-    'password': fields.String(
-        required=True, description='Password of the user')
-})
-
-# penser à limiter les requêtes (rate limite)
-# sur le login et sign in
-
-
-@api.route('/login')
-class Userlogin(Resource):
-    @api.expect(user_authentification)
-    @api.response(400, "Invalid credentials")
-    def post(self):
-        user_data = api.payload
-        user_data_email = user_data['email']
-        existing_user = facade.get_user_by_email(user_data_email)
-        if not existing_user:
-            return {"error": "Invalid credentials"}, 400
-        if existing_user.verify_password(user_data['password']):
-            return existing_user.id, 200
-        else:
-            return {"error": "Invalid credentials"}, 400
-
-
 @api.route('/')
 class UserCreate(Resource):
     @api.expect(user_model, validate=True)
@@ -54,13 +25,6 @@ class UserCreate(Resource):
     def post(self):
         """Register a new user"""
         user_data = api.payload
-        # vérification de critères sur le password ?
-        # password = user_data['password']
-        # user_data['password'] = bcrypt.generate_password_hash(password).decode('utf-8')
-        # password = ""
-
-        # Simulate email uniqueness check
-        # (to be replaced by real validation with persistence)
         if "@" not in user_data['email']:
             return {"error": "Invalid input data: @ char is missing"}, 400
         if user_data['first_name'] == "":

@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from flask_jwt_extended import jwt_required
 
 api = Namespace('places', description='Place operations')
 
@@ -43,13 +44,22 @@ place_model = api.model('Place', {
 
 @api.route('/')
 class PlaceList(Resource):
+    @jwt_required()
     @api.expect(place_model, validate=True)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     @api.response(404, 'Invalid id')
+    @api.response(403, 'Unauthorized action')
     def post(self):
         """Register a new place"""
+        # fetch token identity
+        current_user = facade.get_token_identity()
+        # fetch payload
         place_data = api.payload
+        # check identity
+        if current_user['id'] != place_data['owner_id'] and not current_user['role']:
+            return {"error": "Unauthorized action"}, 403
+        # create place / checks in facade
         try:
             place = facade.create_place(place_data)
         except LookupError as e:
@@ -58,7 +68,9 @@ class PlaceList(Resource):
             return {"error": str(e)}, 400
         if not place:
             return {"error": "Invalid input data"}, 400
-        # need to add the place to the owner list
+        # add the palce to the owner's place list
+        owner = facade.get_user(place.owner_id)
+        owner.add_place(place.id)
         return place.to_dict(), 201
 
     @api.response(200, 'List of places retrieved successfully')
@@ -95,6 +107,7 @@ class PlaceResource(Resource):
                         for element in place.reviews]
         }, 200
 
+    @jwt_required()
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
@@ -102,8 +115,11 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         # Placeholder for the logic to update a place by ID
+        current_user = facade.get_token_identity()
         datas = api.payload
-        place = facade.get_place(place_id)
+        place = facade.get_place(place_id)  # return a place object
+        if current_user['id'] != place.owner_id and not current_user['role']:
+            return {"error": "Unauthorized action"}, 403
         if not place:
             return {"error": "Place not found"}, 404
         try:

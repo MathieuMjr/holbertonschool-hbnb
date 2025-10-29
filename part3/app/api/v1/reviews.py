@@ -21,7 +21,6 @@ class ReviewList(Resource):
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
     @api.response(404, 'ID not found')
-    @api.response(403, "Unauthorized action")
     def post(self):
         """Register a new review"""
         # fetch token identity
@@ -29,8 +28,14 @@ class ReviewList(Resource):
         # fetch payload
         datas = api.payload
         user_full = facade.get_user(current_user['id'])
+        # check the user is the owner of the place
         if datas["place_id"] in user_full.places:
-            return {"error": "Unauthorized action: can't review yourself"}, 403
+            return {"error": "You cannot review your own place."}, 400
+        # check if author already reviewed the place
+        for id in user_full.reviews:
+            review = facade.get_review(id)
+            if datas["place_id"] == review.place_id:
+                return {"error": "You have already reviewed this place."}, 400
         try:
             review = facade.create_review(datas)
         except ValueError as e:
@@ -39,6 +44,8 @@ class ReviewList(Resource):
             return {"error": str(e)}, 404
         if not review:
             return {"error": "Invalid input data"}, 400
+        # add the review to the author:
+        user_full.add_review(review.id)
         return review.to_dict(), 201
 
     @api.response(200, 'List of reviews retrieved successfully')
@@ -50,7 +57,7 @@ class ReviewList(Resource):
             new_list.append({"id": element.id,
                              "comment": element.comment,
                              "rating": element.rating})
-        return new_list
+        return new_list, 200
 
 
 @api.route('/<review_id>')
@@ -69,6 +76,7 @@ class ReviewResource(Resource):
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
     def put(self, review_id):
         """Update a review's information"""
         # fetch token identity
@@ -83,20 +91,31 @@ class ReviewResource(Resource):
         if not current_user['id'] == review.user_id:
             return {
                 "error": "Unauthorized action: "
-                "you have not authored this review"}
-
+                "you have not authored this review"}, 403
+        # update :
         try:
             facade.update_review(review_id, datas)
             return {"message": "Review updated successfully"}, 200
         except ValueError as e:
             return {"error": str(e)}, 400
 
+    @jwt_required()
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
+    @api.response(403, 'Unauthorized action')
     def delete(self, review_id):
         """Delete a review"""
+        # fetch token identity
+        current_user = facade.get_token_identity()
+        # call the review
         review = facade.get_review(review_id)
         if not review:
             return {"error": "Review not found"}, 404
+        # check author :
+        if not current_user['id'] == review.user_id:
+            return {
+                "error": "Unauthorized action: "
+                "you have not authored this review"}, 403
+        # delete the review:
         facade.delete_review(review_id)
         return {"message": "Review deleted successfully"}, 200

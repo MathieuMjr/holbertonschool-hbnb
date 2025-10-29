@@ -17,6 +17,7 @@ user_model = api.model('User', {
         required=True, description='Password of the user')
 })
 
+
 @api.route('/')
 class UserCreate(Resource):
     @api.expect(user_model, validate=True)

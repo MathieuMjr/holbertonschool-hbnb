@@ -63,6 +63,8 @@ class InMemoryRepository(Repository):
         obj = self.get(obj_id)
         if obj:
             obj.update(data)  # use update method from base class in models
+            if 'password' in data:
+                obj.hash_password(obj.password)
 
     def delete(self, obj_id):
         """

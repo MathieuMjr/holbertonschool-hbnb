@@ -29,7 +29,8 @@ class Userlogin(Resource):
             return {"error": "Invalid credentials"}, 401
         if existing_user.verify_password(user_data['password']):
             access_token = create_access_token(
-                identity=str(existing_user.id),   # only user ID goes here
+                identity=str(existing_user.id),   # pas fan de cette identity
+                # mais du coup on va faire avec ce qui est donné
                 additional_claims={"is_admin": existing_user.is_admin}
                 # extra info here
             )

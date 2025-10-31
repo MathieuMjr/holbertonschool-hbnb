@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from flask_jwt_extended import jwt_required
 
 api = Namespace('amenities', description='Amenity operations')
 
@@ -11,12 +12,19 @@ amenity_model = api.model('Amenity', {
 
 @api.route('/')
 class AmenityCreate(Resource):
+    @jwt_required()
     @api.expect(amenity_model, validate=True)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
     @api.response(409, 'Ressource already exist')
+    @api.response(403, 'Admin privileges required')
     def post(self):
         """Register a new amenity"""
+        # fetch identity token
+        current_user = facade.get_token_identity()
+        # check role
+        if not current_user['role']:
+            return {"error": "Admin privileges required"}, 403
         data = api.payload
         existing_amenity = facade.get_by_attribute("name", data['name'])
         if existing_amenity:
@@ -46,6 +54,7 @@ class AmenityResource(Resource):
             return {"error": "Amenity not found"}, 404
         return amenity.to_dict()
 
+    @jwt_required()
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
     @api.response(404, 'Amenity not found')
@@ -53,6 +62,11 @@ class AmenityResource(Resource):
     @api.response(409, 'Name already exist')
     def put(self, amenity_id):  # paramètre de la route
         """Update an amenity's information"""
+        # fetch identity token
+        current_user = facade.get_token_identity()
+        # check role
+        if not current_user['role']:
+            return {"error": "Admin privileges required"}, 403
         data = api.payload
         if "name" not in data or data["name"] == "":
             return {"error": "Invalid input data"}, 400

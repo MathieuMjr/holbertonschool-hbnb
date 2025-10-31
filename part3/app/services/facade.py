@@ -57,6 +57,7 @@ class HBnBFacade:
         """
         This function modify a user
         """
+        data.hash_password(data.password)
         return self.user_repo.update(obj_id, data)
     # method from repo
 

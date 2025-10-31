@@ -112,7 +112,7 @@ class ReviewResource(Resource):
         if not review:
             return {"error": "Review not found"}, 404
         # check author :
-        if not current_user['id'] == review.user_id:
+        if not current_user['id'] == review.user_id and not current_user['role']:
             return {
                 "error": "Unauthorized action: "
                 "you have not authored this review"}, 403

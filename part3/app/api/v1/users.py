@@ -1,6 +1,8 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 from flask_jwt_extended import jwt_required, verify_jwt_in_request
+from flask_jwt_extended.exceptions import NoAuthorizationError, JWTExtendedException
+from jwt import ExpiredSignatureError
 
 api = Namespace('users', description='User operations')
 
@@ -28,8 +30,14 @@ class UserCreate(Resource):
         # initialize role variable to false
         role = False
         # verify if there is a token and validate it if so
-        verify_jwt_in_request(optional=True)
-        current_user = facade.get_token_identity()
+        try:
+            verify_jwt_in_request(optional=True)
+            current_user = facade.get_token_identity()
+        # le bloc except va ignorer un token expiré rendant possible
+        # de créer un nouveau user non admin par quelqu'un
+        # ayant un token invalid, comme s'il était non logué
+        except (JWTExtendedException, ExpiredSignatureError, NoAuthorizationError):
+            current_user = None
         # fetch current user from token
         if current_user:
             role = current_user['role']
@@ -107,19 +115,23 @@ class UserResource(Resource):
         current_user = facade.get_token_identity()
         # fetch payload
         update_datas = api.payload
-        if ('email' in update_datas or 'password' in update_datas) and not current_user['role']:
-            return {'error': 'You cannot modify email or password.'}, 400
         # check authorization :
         if current_user['id'] != user_id and not current_user['role']:
             return {"error": "Unauthorized action"}, 403
+        # mai and password authorization
+        if ('email' in update_datas or 'password' in update_datas) and not current_user['role']:
+            return {'error': 'You cannot modify email or password.'}, 400
         # rebuild the user
         user = facade.get_user(user_id)
         if not user:
             return {"error": "Not found"}, 404
         # check if is trying to update with an existing email
-        user_mail = facade.get_user_by_email(update_datas['email'])
-        if user_mail and user_mail.id != user_id:
-            return {"error": "Email already exist"}, 400
+        if 'email' in update_datas:
+            user_mail = facade.get_user_by_email(update_datas['email'])
+            if user_mail and user_mail.id != user_id:
+                return {"error": "Email already exist"}, 400
+            if "@" not in update_datas['email']:
+                return {"error": "Invalid data input"}, 400
         # update
         facade.update(user_id, update_datas)
         return user.to_dict()

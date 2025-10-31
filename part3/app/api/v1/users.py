@@ -1,6 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, verify_jwt_in_request
 
 api = Namespace('users', description='User operations')
 
@@ -22,9 +22,23 @@ class UserCreate(Resource):
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered or invalid input data')
+    @api.response(403, 'Unauthorized action')
     def post(self):
         """Register a new user"""
+        # initialize role variable to false
+        role = False
+        # verify if there is a token and validate it if so
+        verify_jwt_in_request(optional=True)
+        current_user = facade.get_token_identity()
+        # fetch current user from token
+        if current_user:
+            role = current_user['role']
+        # fetch datas from payload
         user_data = api.payload
+        # check if tries to create an admin
+        if 'is_admin' in user_data:
+            if user_data['is_admin'] and not role:
+                return {"error": "Unauthorized action"}, 403
         if "@" not in user_data['email']:
             return {"error": "Invalid input data: @ char is missing"}, 400
         if user_data['first_name'] == "":
@@ -42,12 +56,17 @@ class UserCreate(Resource):
             'email': new_user.email
             }, 201
 
+    @jwt_required()
     @api.response(200, 'OK')
+    @api.response(403, "Admin privileges required")
     def get(self):
         """
         This function responsible for
         fetching all users informations
         """
+        current_user = facade.get_token_identity()
+        if not current_user['role']:
+            return {"error": "Admin privileges required"}, 403
         users = facade.get_all()
         new_list = []
         for element in users:
@@ -88,19 +107,19 @@ class UserResource(Resource):
         current_user = facade.get_token_identity()
         # fetch payload
         update_datas = api.payload
-        if 'email' in update_datas or 'password' in update_datas:
+        if ('email' in update_datas or 'password' in update_datas) and not current_user['role']:
             return {'error': 'You cannot modify email or password.'}, 400
         # check authorization :
-        if current_user['id'] != user_id:
+        if current_user['id'] != user_id and not current_user['role']:
             return {"error": "Unauthorized action"}, 403
         # rebuild the user
         user = facade.get_user(user_id)
         if not user:
             return {"error": "Not found"}, 404
         # check if is trying to update with an existing email
-        # user_mail = facade.get_user_by_email(update_datas['email'])
-        # if user_mail and user_mail.id != user_id:
-        #     return {"error": "Email already exist"}, 400
+        user_mail = facade.get_user_by_email(update_datas['email'])
+        if user_mail and user_mail.id != user_id:
+            return {"error": "Email already exist"}, 400
         # update
         facade.update(user_id, update_datas)
         return user.to_dict()

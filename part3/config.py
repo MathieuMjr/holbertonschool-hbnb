@@ -9,6 +9,8 @@ class Config:
 # hérite de config et surchage debut:
 class DevelopmentConfig(Config):
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///development.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 # dictionnaire ou les clé sont associées à un type de config

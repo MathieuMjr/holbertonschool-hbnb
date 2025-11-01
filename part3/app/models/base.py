@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from app.extensions import db
 """
 This module contains the basemodel class for
 models objetcs.

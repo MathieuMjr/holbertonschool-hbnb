@@ -7,6 +7,7 @@ from app.api.v1.reviews import api as reviews_ns
 from app.api.v1.auth import api as auth_ns
 from app.extensions import bcrypt
 from app.extensions import jwt
+from app.extensions import db
 
 
 def create_app(config_class="config.DevelopmentConfig"):
@@ -15,6 +16,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     # ici on ne fait que définir la fonction ; c'est dans run.py
     # qu'on l'appelera et qu'on indiquera quelle config lancer
     app = Flask(__name__)
+    db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
     app.config.from_object(config_class)

@@ -5,14 +5,17 @@ from app.models.place import Place
 from app.models.review import Review
 from flask_jwt_extended import get_jwt_identity, get_jwt
 from app.persistence.user_repository import UserRepository
+from app.persistence.place_repository import PlaceRepository
+from app.persistence.amenity_repository import AmenityRepository
+from app.persistence.review_repository import ReviewRepository
 
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
+        self.place_repo = PlaceRepository()
+        self.review_repo = ReviewRepository()
+        self.amenity_repo = AmenityRepository()
 
 # --- TOKEN IDENTITY
     @staticmethod
@@ -111,7 +114,8 @@ class HBnBFacade:
         amenities_ids = place_data.pop("amenities", None)
         # PLACE CREATION:
         place = Place(**place_data)
-        # AMENITY LIST MANAGEMENT
+        # AMENITY LIST MANAGEMENT - attention à bien récupérer des objets
+        # amenity quand la relationship sera fonctionnelle
         if amenities_ids:
             for element in amenities_ids:
                 if self.amenity_repo.get(element):

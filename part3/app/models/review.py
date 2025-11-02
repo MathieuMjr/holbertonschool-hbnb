@@ -1,13 +1,14 @@
 from .base import BaseModel
+from sqlalchemy.orm import Mapped, mapped_column
 
 
 class Review(BaseModel):
-    def __init__(self, comment, rating, place_id, user_id):
-        super().__init__()
-        self.comment = comment
-        self.rating = rating
-        self.place_id = place_id
-        self.user_id = user_id  # Author' id
+    __tablename__ = 'reviews'
+
+    comment: Mapped[str] = mapped_column(nullable=False)
+    rating: Mapped[int] = mapped_column(nullable=False)
+    place_id: Mapped[str] = mapped_column(nullable=False)
+    user_id: Mapped[str] = mapped_column(nullable=False)
 
     def to_dict(self):
         return {

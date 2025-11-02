@@ -1,10 +1,11 @@
 from .base import BaseModel
+from sqlalchemy.orm import Mapped, mapped_column
 
 
 class Amenity(BaseModel):
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
+    __tablename__ = 'amenities'
+
+    name: Mapped[str] = mapped_column(nullable=False, unique=True)
 
     def to_dict(self):
         return {

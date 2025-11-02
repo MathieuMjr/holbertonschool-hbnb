@@ -1,21 +1,20 @@
 from .base import BaseModel
+from sqlalchemy.orm import Mapped, mapped_column
 """
 This module contains a representation of Place to rent
 """
 
 
 class Place(BaseModel):
-    def __init__(
-            self, title, description, price, latitude, longitude, owner_id):
-        super().__init__()
-        self.title = title
-        self.description = description
-        self.price = price
-        self.latitude = latitude
-        self.longitude = longitude
-        self.owner_id = owner_id  # owner id
-        self.amenities = []  # stores list of amenities
-        self.reviews = []  # stores list of reviews
+    __tablename__ = 'places'
+
+    title: Mapped[str] = mapped_column(nullable=False)
+    description: Mapped[str] = mapped_column(nullable=False)
+    price: Mapped[float] = mapped_column(nullable=False)
+    latitude: Mapped[float] = mapped_column(nullable=False)
+    # price per nights
+    longitude: Mapped[float] = mapped_column(nullable=False)
+    owner_id: Mapped[str] = mapped_column(nullable=False)
 
     def add_review(self, review):
         self.reviews.append(review)

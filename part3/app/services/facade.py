@@ -4,11 +4,12 @@ from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
 from flask_jwt_extended import get_jwt_identity, get_jwt
+from app.persistence.user_repository import UserRepository
 
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = SQLAlchemyRepository()
+        self.user_repo = UserRepository()
         self.place_repo = InMemoryRepository()
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
@@ -43,8 +44,8 @@ class HBnBFacade:
         This function retrieve a user
         by its email
         """
-        return self.user_repo.get_by_attribute('email', email)
-    # method from repo
+        return self.user_repo.get_user_by_email(email)
+    # method from user_repositoryf
 
     def get_all(self):
         """

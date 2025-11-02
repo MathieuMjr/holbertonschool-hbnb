@@ -7,17 +7,12 @@ models objetcs.
 """
 
 
-class BaseModel:
-    def __init__(self):
-        """
-        Objects attributes :
-        - id : unique ID generated via uuid module
-        - creation date
-        - update date : modified each time the object is modified
-        """
-        self.id = str(uuid.uuid4()) # str typecast necessary so it is serialisable in json
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+class BaseModel(db.Model):
+    __abstract__ = True  # means it's an abstract class > no table created
+
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def save(self):
         """Update the updated_at timestamp whenever the object is modified"""

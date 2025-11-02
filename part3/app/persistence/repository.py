@@ -44,8 +44,9 @@ class SQLAlchemyRepository(Repository):
     def update(self, obj_id, data):
         obj = self.get(obj_id)
         if obj:
-            for key, value in data.items():
-                setattr(obj, key, value)
+            obj.update
+            if 'password' in data:
+                obj.hash_password(obj.password)
             db.session.commit()
 
     def delete(self, obj_id):

@@ -24,7 +24,8 @@ def create_default_admin():
 
 
 if __name__ == '__main__':
-    create_default_admin()
+    with app.app_context():
+        create_default_admin()
     app.run(debug=True)
     # ici, app.run prendra un objet de type config
     # import à faire : import config

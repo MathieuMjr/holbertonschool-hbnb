@@ -15,11 +15,12 @@ def create_app(config_class="config.DevelopmentConfig"):
     # d'un objt de type developmentconfig depuis le fichier config
     # ici on ne fait que définir la fonction ; c'est dans run.py
     # qu'on l'appelera et qu'on indiquera quelle config lancer
-    app = Flask(__name__)
+    app = Flask(__name__)  # créer l'app
+    app.config.from_object(config_class)  # charge la config
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
-    app.config.from_object(config_class)
+
     # config est un attribut de app :
     # un dictionnaire qui contient qui contient des clé
     # genre debug, etc. auxquelles on transmet les valeurs

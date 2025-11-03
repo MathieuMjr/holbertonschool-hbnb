@@ -29,11 +29,12 @@ class ReviewList(Resource):
         datas = api.payload
         user_full = facade.get_user(current_user['id'])
         # check the user is the owner of the place
-        if datas["place_id"] in user_full.places:
-            return {"error": "You cannot review your own place."}, 400
+        for place in user_full.places:
+            if datas["place_id"] == place.id:
+                return {"error": "You cannot review your own place."}, 400
         # check if author already reviewed the place
-        for id in user_full.reviews:
-            review = facade.get_review(id)
+        for review in user_full.reviews:
+            review = facade.get_review(review.id)
             if datas["place_id"] == review.place_id:
                 return {"error": "You have already reviewed this place."}, 400
         try:
@@ -45,7 +46,7 @@ class ReviewList(Resource):
         if not review:
             return {"error": "Invalid input data"}, 400
         # add the review to the author:
-        user_full.add_review(review.id)
+        # user_full.add_review(review.id)
         return review.to_dict(), 201
 
     @api.response(200, 'List of reviews retrieved successfully')

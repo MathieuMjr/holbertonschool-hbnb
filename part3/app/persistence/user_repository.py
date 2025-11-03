@@ -14,4 +14,4 @@ class UserRepository(SQLAlchemyRepository):
         return self.model.query.filter_by(email=email).first()
         # specific request for get a user by email
         # this one can't be defined in SQLAlchemmyrepository class
-        # cause it would create it for all the others repos. 
+        # cause it would create it for all the others repos.

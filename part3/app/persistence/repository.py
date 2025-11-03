@@ -44,7 +44,7 @@ class SQLAlchemyRepository(Repository):
     def update(self, obj_id, data):
         obj = self.get(obj_id)
         if obj:
-            obj.update
+            obj.update(data)
             if 'password' in data:
                 obj.hash_password(obj.password)
             db.session.commit()

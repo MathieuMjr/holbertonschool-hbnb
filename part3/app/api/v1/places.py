@@ -69,8 +69,8 @@ class PlaceList(Resource):
         if not place:
             return {"error": "Invalid input data"}, 400
         # add the palce to the owner's place list
-        owner = facade.get_user(place.owner_id)
-        owner.add_place(place.id)
+        # owner = facade.get_user(place.owner_id)
+        # owner.add_place(place.id)
         return place.to_dict(), 201
 
     @api.response(200, 'List of places retrieved successfully')

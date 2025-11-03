@@ -1,5 +1,6 @@
 from .base import BaseModel
 from app.extensions import bcrypt, db
+from sqlalchemy.orm import relationship
 
 
 class User(BaseModel):
@@ -10,6 +11,8 @@ class User(BaseModel):
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    places = relationship('Place', back_populates="owner", lazy=True)
+    reviews = relationship('Review', back_populates="user", lazy=True)
 
     def add_review(self, review):
         """Add a review to the place."""
@@ -29,8 +32,8 @@ class User(BaseModel):
             "first_name": self.first_name,
             "email": self.email,
             "is_admin": self.is_admin,
-            "places": self.places,
-            "reviews": self.reviews
+            # "places": self.places,
+            # "reviews": self.reviews
             }
 
     def hash_password(self, password):

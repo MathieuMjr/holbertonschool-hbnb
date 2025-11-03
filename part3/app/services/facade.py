@@ -1,4 +1,3 @@
-from app.persistence.repository import InMemoryRepository, SQLAlchemyRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
@@ -117,12 +116,13 @@ class HBnBFacade:
         # AMENITY LIST MANAGEMENT - attention à bien récupérer des objets
         # amenity quand la relationship sera fonctionnelle
         if amenities_ids:
-            for element in amenities_ids:
-                if self.amenity_repo.get(element):
-                    place.add_amenity(element)
+            for id in amenities_ids:
+                amenity = self.amenity_repo.get(id)
+                if amenity:
+                    place.add_amenity(amenity)
                 else:
                     # CHECK AMENITY ID
-                    raise LookupError(f"Amenity id not found:{element}")
+                    raise LookupError(f"Amenity id not found:{id}")
         # SAVE PLACE
         self.place_repo.add(place)
         return place
@@ -175,7 +175,7 @@ class HBnBFacade:
         # REVIEW CREATION:
         review = Review(**review_data)
         # ADDING REVIEW TO THE PLACE:
-        place.add_review(review.id)
+        # place.add_review(review.id)
         # REVIEW SAVING:
         self.review_repo.add(review)
         return review

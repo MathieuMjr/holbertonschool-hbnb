@@ -7,7 +7,9 @@ class Amenity(BaseModel):
     __tablename__ = 'amenities'
 
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
-    places = relationship("Place", secondary=place_amenity, back_populates='amenities')
+    places = relationship(
+        "Place", secondary=place_amenity,
+        back_populates='amenities')
 
     def to_dict(self):
         return {

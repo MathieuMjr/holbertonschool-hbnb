@@ -101,9 +101,9 @@ class PlaceResource(Resource):
             "longitude": place.longitude,
             "owner": facade.get_user(place.owner_id).to_dict(),
             "amenities":
-            [facade.get_amenity(element).to_dict()
+            [element.to_dict()
              for element in place.amenities],
-            "reviews": [facade.get_review(element).to_dict()
+            "reviews": [element.to_dict()
                         for element in place.reviews]
         }, 200
 
@@ -119,7 +119,9 @@ class PlaceResource(Resource):
         datas = api.payload
         place = facade.get_place(place_id)  # return a place object
         if current_user['id'] != place.owner_id and not current_user['role']:
-            return {"error": "Unauthorized action: you are not the place owner"}, 403
+            return {
+                "error": "Unauthorized action: you are not the place owner"
+                }, 403
         if not place:
             return {"error": "Place not found"}, 404
         try:

@@ -36,7 +36,9 @@ class UserCreate(Resource):
         # le bloc except va ignorer un token expiré rendant possible
         # de créer un nouveau user non admin par quelqu'un
         # ayant un token invalid, comme s'il était non logué
-        except (JWTExtendedException, ExpiredSignatureError, NoAuthorizationError):
+        except (JWTExtendedException,
+                ExpiredSignatureError,
+                NoAuthorizationError):
             current_user = None
         # fetch current user from token
         if current_user:

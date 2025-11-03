@@ -97,8 +97,8 @@ class UserResource(Resource):
             'id': user.id,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'email': user.email,
-            'places': user.places
+            'email': user.email
+            # 'places': user.places
             }, 200
 
     @jwt_required()

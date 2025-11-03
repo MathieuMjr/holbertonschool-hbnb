@@ -8,11 +8,14 @@ class Review(BaseModel):
 
     comment: Mapped[str] = mapped_column(nullable=False)
     rating: Mapped[int] = mapped_column(nullable=False)
-    place_id: Mapped[str] = mapped_column(ForeignKey('places.id'), nullable=False)
-    user_id: Mapped[str] = mapped_column(ForeignKey('users.id'), nullable=False)
+    place_id: Mapped[str] = mapped_column(
+        ForeignKey('places.id'),
+        nullable=False)
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey('users.id'),
+        nullable=False)
     user = relationship('User', back_populates='reviews')
     place = relationship('Place', back_populates='reviews')
-
 
     def to_dict(self):
         return {

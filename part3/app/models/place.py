@@ -12,6 +12,7 @@ place_amenity = db.Table(
     Column('amenity.id', String, ForeignKey('amenities.id'), primary_key=True, nullable=False)
 )
 
+
 class Place(BaseModel):
     __tablename__ = 'places'
 
@@ -29,8 +30,8 @@ class Place(BaseModel):
     def add_review(self, review):
         self.reviews.append(review)
 
-    def add_amenity(self, amenity_id):
-        self.amenities.append(amenity_id)
+    def add_amenity(self, amenity):
+        self.amenities.append(amenity)
 
     def to_dict(self):
         return {
@@ -40,7 +41,8 @@ class Place(BaseModel):
             "price": self.price,
             "latitude": self.latitude,
             "longitude": self.longitude,
-            "owner_id": self.owner_id
+            "owner_id": self.owner_id,
+            "amenities": [amenity.to_dict() for amenity in self.amenities]
         }
 
 # # SETTERS / GETTERS

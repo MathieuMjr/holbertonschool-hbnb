@@ -25,8 +25,8 @@ class User(BaseModel):
         """Add a review to the place."""
         self.reviews.append(review)
 
-    def add_place(self, place_id):
-        self.places.append(place_id)
+    def add_place(self, place):
+        self.places.append(place)
 
     def to_dict(self):
         """
@@ -39,8 +39,8 @@ class User(BaseModel):
             "first_name": self.first_name,
             "email": self.email,
             "is_admin": self.is_admin,
-            # "places": self.places,
-            # "reviews": self.reviews
+            # "places": [place.to_dict() for place in self.places],
+            # "reviews": [review.to_dict() for review in self.reviews]
             }
 
     def hash_password(self, password):

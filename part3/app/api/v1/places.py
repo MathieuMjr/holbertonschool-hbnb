@@ -112,6 +112,7 @@ class PlaceResource(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized acion')
     def put(self, place_id):
         """Update a place's information"""
         # Placeholder for the logic to update a place by ID
@@ -142,10 +143,4 @@ class PlaceReviewList(Resource):
         if not place:
             return {"error": "Place not found"}, 404
         place_reviews_list = place.reviews
-        new_list = []
-        for element in place_reviews_list:
-            review = facade.get_review(element)
-            new_list.append({"id": review.id,
-                             "comment": review.comment,
-                             "rating": review.rating})
-        return new_list, 200
+        return [review.to_dict() for review in place_reviews_list], 200

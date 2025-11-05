@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `amenities`(
 
 CREATE TABLE IF NOT EXISTS `reviews`(
     `id` CHAR(36) PRIMARY KEY, --(UUID format).
-    `text` TEXT NOT NULL,
+    `comment` TEXT NOT NULL,
     `rating` INT CHECK(`rating` BETWEEN 1 AND 5),
     `user_id` CHAR(36) NOT NULL,
     `place_id` CHAR(36) NOT NULL,
@@ -64,3 +64,16 @@ INSERT INTO amenities(
 ) VALUES ("5331e689-3d34-43c9-be01-a51c22330989", "WiFi" ),
 ("ed6d39f9-66b8-4ea6-bd30-0d327e585b99", "Swimming Pool"),
 ("79e2eda2-4f3f-4517-aa34-f57de9fa9946", "Air Conditioning");
+
+-- SOME TESTS 
+-- SELECT * FROM users;
+-- SELECT * FROM amenities;
+-- INSERT INTO users(id, first_name, last_name, email, password) VALUES ("05641b5b-e890-430b-b909-dde52d845139", "John", "Doe", "john.doe@example.com", "$2a$12$ur07ZGiAbqPeS4QKg7zGYuMXGDl3bpNqlefiH7BeAA8/65POAP48q");
+-- INSERT INTO places(id, title, description, price, latitude, longitude, owner_id) VALUES ("85a64a7d-7dd8-48ba-b2b0-8a52e173ffd5", "Pretty Apartment", "A lovely place to stay", 200.0, 50.7749, -122.4194, "05641b5b-e890-430b-b909-dde52d845139");
+-- SELECT * FROM places;
+-- INSERT INTO places(id, title, description, price, latitude, longitude, owner_id) VALUES ("85a64a7d-7dd8-48ba-b2b0-8a52e173ffd5", "Pretty Apartment", "A lovely place to stay", 200.0, 50.7749, -122.4194, "05641b5b-e890-430b-b909-dde52d845139");
+-- INSERT INTO place_amenity(place_id, amenity_id) VALUES ("85a64a7d-7dd8-48ba-b2b0-8a52e173ffd5", "5331e689-3d34-43c9-be01-a51c22330989"), ("85a64a7d-7dd8-48ba-b2b0-8a52e173ffd5", "79e2eda2-4f3f-4517-aa34-f57de9fa9946");
+-- SELECT * FROM place_amenity;
+-- SELECT a.name FROM amenities AS a LEFT JOIN place_amenity AS pa ON pa.amenity_id = a.id LEFT JOIN places as p ON p.id = pa.place_id WHERE place_id = "85a64a7d-7dd8-48ba-b2b0-8a52e173ffd5";
+-- INSERT INTO amenities(id, name) VALUES ("3d2331fc-e6a1-48fb-b5a2-cc069ace31e2", "Haunted");
+-- DELETE FROM amenities WHERE name = "Haunted";

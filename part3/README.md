@@ -288,7 +288,7 @@ Don't forget to download the Postman environment below.
 			"name": "Login",
 			"item": [
 				{
-					"name": "user_login",
+					"name": "John Doe login",
 					"event": [
 						{
 							"listen": "test",
@@ -337,7 +337,7 @@ Don't forget to download the Postman environment below.
 					"response": []
 				},
 				{
-					"name": "user_login 2",
+					"name": "user 2 login",
 					"event": [
 						{
 							"listen": "test",
@@ -386,7 +386,7 @@ Don't forget to download the Postman environment below.
 					"response": []
 				},
 				{
-					"name": "Admin_login",
+					"name": "By default admin login",
 					"event": [
 						{
 							"listen": "test",
@@ -406,7 +406,7 @@ Don't forget to download the Postman environment below.
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"email\": \"admin@example.com\", \"password\": \"admin1234\"}",
+							"raw": "{\"email\": \"admin@example.com\", \"password\": \"admin\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -654,7 +654,7 @@ Don't forget to download the Postman environment below.
 					"response": []
 				},
 				{
-					"name": "Admin creation",
+					"name": "Admin 2 creation",
 					"event": [
 						{
 							"listen": "test",
@@ -785,7 +785,7 @@ Don't forget to download the Postman environment below.
 					"response": []
 				},
 				{
-					"name": "Place 2 creation",
+					"name": "Place 2 creation with amenity from user 2",
 					"event": [
 						{
 							"listen": "test",
@@ -903,7 +903,7 @@ Don't forget to download the Postman environment below.
 					"response": []
 				},
 				{
-					"name": "Get place reviews",
+					"name": "Get place 2 reviews",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -928,7 +928,7 @@ Don't forget to download the Postman environment below.
 			"name": "Reviews",
 			"item": [
 				{
-					"name": "review place 1",
+					"name": "review place 1 by user 2",
 					"event": [
 						{
 							"listen": "test",
@@ -975,7 +975,7 @@ Don't forget to download the Postman environment below.
 					"response": []
 				},
 				{
-					"name": "Update place",
+					"name": "Update review",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1063,7 +1063,7 @@ Don't forget to download the Postman environment below.
 					"response": []
 				},
 				{
-					"name": "review place 2",
+					"name": "review place 2 by John Doe",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1095,14 +1095,6 @@ Don't forget to download the Postman environment below.
 								""
 							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "New Request",
-					"request": {
-						"method": "GET",
-						"header": []
 					},
 					"response": []
 				}

@@ -15,7 +15,10 @@ Feel free to visit this repo if you want to take a look at the materials : https
 
 ## OVERVIEW
 
-Here is an overview of the file organization. For more details on each file, take a look at the table below. 
+In order to get a good overview of the project, this section provides:
+- the overall directories and files organization
+- details on the purpose of each files
+- the SQL diagram of the implemented database
 
 ```
 part3/
@@ -74,6 +77,10 @@ Directory | Filename | Responsibility |
 | persistence | `repository.py` | define the basic CRUD functions to interact with database.
 | persistence | `amenity_repository.py` <br> `palce_repository.py`<br> `review_repository.py`<br> `user_repository.py` | define for each entities specific functions to interact with database, for exemple, `get_user_by_email` that other entities can't do.
 
+**SQL Diagram**
+
+<img src=SQL_Diagram.jpg>
+
 ## REQUIREMENTS: 
 
 The following instruction will help you to install this app on your computer. 
@@ -131,7 +138,6 @@ Repository methods are related to objects storage and retrieving.
 Models methods are in charge to create object and update them. Although, update method from models is called by a repository method.
 
 
-
 ## SUPPORTED FEATURES:
 
 Since this is a simple version of AirBNB with the purpose to practice alone and in a limited amount of time, some features are intentionally simplified due to time constraints.
@@ -153,7 +159,7 @@ New features since part 2:
 | MODELS OBJECTS | ATTRIBUTES | API ENDPOINTS | METHODS |
 |--|--|--|--|
 |**Base Model** | `id` (str(UUID)),<br> `creation_date` (date),<br> `update_date` (date) | / | update(object),<br> save(object)
-|**User** | `first_name` (str),<br> `last_name` (str),<br> `email` (str),<br> `is_admin` (bool),<br> `places` (list[ids]) | **POST** `/users` - create user<br> **GET** `/users` - all users - *Admin role required*<br> **GET** `/users/<user_id>` - get user by id<br>**PUT** `/users/<user_id>` update a user - *JWT required* | /
+|**User** | `first_name` (str),<br> `last_name` (str),<br> `email` (str),<br> `is_admin` (bool),<br> `places` (list[ids]) | **POST** `/users` - create user - *Admin role required for admin creation*<br> **GET** `/users` - all users - *Admin role required*<br> **GET** `/users/<user_id>` - get user by id<br>**PUT** `/users/<user_id>` update a user - *JWT required* | /
 |**Place** | `title` (str),<br> `description` (str), <br> `price` (float),<br> `latitude` (float),<br> `longitude` (float),<br> `owner_id` (str(UUID))| **POST** `/places` - create place *JWT required*<br> **GET** `/places` - all places<br> **GET** `/places/<place_id>` - get place by id <br>**GET** `/places/<place_id>/reviews` - get all reviews of a place <br>**PUT** `/places/<place_id>` update a place- *JWT required* | add_review(review_id),<br> add_amenity(amenity_id)
 |**Amenity** | `name`(str) | **POST** `/amenities` - create amenity - *Admin role required*<br> **GET** `/amenities` - all amenities<br> **GET** `/amenities/<amenity_id>` - get amenity by id <br>**PUT** `/amenities/<amenity_id>` update amenity - *Admin role required* | /
 | **Review** | `comment` (str), <br> `rating` int, <br>`place_id` (str(UUID)), <br> `user_id` (str(UUID)) | **POST** `/reviews` - create review - *JWT required*<br> **GET** `/reviews` - all reviews<br> **GET** `/reviews/<review_id>` - get review by id <br>**PUT** `/reviews/<review_id>` update  review *JWT required*<br> **DELETE** `/reviews/<review_id>` - delete review *JWT required*| /
@@ -262,14 +268,10 @@ Here is a quick recap of the different status code you should get in return :
 
 ## TESTS AND VALIDATION
 
-You might have noticed a `tests` folder is present. 
-It contains quick unittest made at part2, before authentication was implemented. 
+Unittest from part2 are no longer functional since we've implemented authentication - unfortunately, due to time constraint, they have not been updated.
 
-**They are no longer supported.**
-
-In order to check the routes, I have used Postman. 
-If you want to take a look and make some tries, import the following json in order to try all the request I made.
-Don't forget to download the Postman environment below. 
+During the development, I have used Postman ; you can find below the JSON file to import in order to perform the tests I did on my own code.
+Don't forget to import en environment too.
 <details>
 <summary> Click to get the json code </summary>
 
@@ -911,11 +913,12 @@ Don't forget to download the Postman environment below.
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}places/reviews",
+							"raw": "{{base_url}}places/{{place2_id}}/reviews",
 							"host": [
 								"{{base_url}}places"
 							],
 							"path": [
+								"{{place2_id}}",
 								"reviews"
 							]
 						}

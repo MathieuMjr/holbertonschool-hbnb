@@ -5,24 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List of Places</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="images/icon.png" rel="icon" type="image/png">
 </head>
 <body>
+    <!--HEADER-->
     <header>
+        <img class="logo" src="images/logo.png" alt="logo">
+        <button class="login-button">LOGIN</button>
         <nav>
+            <a href="index.html">Home</a>
             <a href="login.html" id="login-link">Login</a>
         </nav>
     </header>
+    <!--HEADER-->
     <main>
         <section id="filter">
+            <h2>Filtres</h2>
             <label for="price-filter">Max Price:</label>
             <select id="price-filter">
                 <!-- Options will be populated dynamically -->
             </select>
         </section>
         <section id="places-list">
+            <div class="place_card">
+                <a href="place.html3"> <img src="" alt="Some beautiful place"></a>
+                <div class="place_container">
+                    <h4>Title of the place</h4>
+                    <p>Price</p>
+                    <a class=details-button href="place.html">View details</a>
+                </div>
+            </div>
+            <div class="place_card">
+                <a href="place.html3"> <img src="" alt="Some beautiful place"></a>
+                <div class="place_container">
+                    <h4>Title of the place</h4>
+                    <p>Price</p>
+                    <a class=details-button href="place.html">View details</a>
+                </div>
+            </div>
+            <div class="place_card">
+                <a href="place.html3"> <img src="" alt="Some beautiful place"></a>
+                <div class="place_container">
+                    <h4>Title of the place</h4>
+                    <p>Price</p>
+                    <a class=details-button href="place.html">View details</a>
+                </div>
+            </div>
             <!-- List of places will be populated dynamically -->
         </section>
     </main>
     <script src="scripts.js"></script>
+    <!-- FOOTER -->
+    <footer>
+    <div>
+    <p>© All rights reserved</p>
+    </div>
+    </footer>
+    <!-- FOOTER -->
 </body>
 </html>

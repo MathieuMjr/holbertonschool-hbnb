@@ -7,13 +7,38 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!--HEADER-->
+    <header>
+        <img class="logo" src="images/logo.png" alt="logo">
+        <button class="login-button">LOGIN</button>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html" id="login-link">Login</a>
+        </nav>
+    </header>
+    <!--HEADER-->
     <main>
         <section id="place-details">
+            <h4>Place title</h4>
+            <p>Place description</p>
+            <p>Price</p>
+            <p>Owner</p>
+            <h5>Amenities</h5>
+            <ul class="place-info">
+                <li>Amenity 1</li>
+                <li>Amenity 2</li>
+                <li>Amenity 3</li>
+            </ul>
             <!-- Place details will be populated dynamically -->
         </section>
         <section id="reviews">
+            <div class="review-card"></div>
+            <h4>Author</h4>
+            <p>Comment</p>
+            <p>rating</p>
             <!-- Reviews will be populated dynamically -->
         </section>
+        <!-- si loggé -->
         <section id="add-review">
             <h2>Add a Review</h2>
             <form id="review-form">
@@ -26,4 +51,9 @@
     </main>
     <script src="scripts.js"></script>
 </body>
+<footer>
+    <div>
+    <p>© All rights reserved</p>
+    </div>
+</footer>
 </html>

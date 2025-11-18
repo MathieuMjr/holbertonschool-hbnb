@@ -8,6 +8,7 @@ from app.api.v1.auth import api as auth_ns
 from app.extensions import bcrypt
 from app.extensions import jwt
 from app.extensions import db
+from flask_cors import CORS
 
 
 def create_app(config_class="config.DevelopmentConfig"):
@@ -20,6 +21,10 @@ def create_app(config_class="config.DevelopmentConfig"):
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
+    # le r"/*" est un regex qui selectionne toutes les endpoint/route
+    # puis dit que toutes les origines externes sont acceptées pour faire de requêtes
+    # (à changer en prod)
 
     # config est un attribut de app :
     # un dictionnaire qui contient qui contient des clé

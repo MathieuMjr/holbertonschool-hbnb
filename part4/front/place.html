@@ -10,7 +10,7 @@
     <!--HEADER-->
     <header>
         <img class="logo" src="images/logo.png" alt="logo">
-        <button class="login-button">LOGIN</button>
+        <a class="login-button" href="login.html">LOGIN</a>
         <nav>
             <a href="index.html">Home</a>
             <a href="login.html" id="login-link">Login</a>
@@ -19,7 +19,7 @@
     <!--HEADER-->
     <main>
         <section id="place-details">
-            <h4>Place title</h4>
+            <!-- <h4>Place title</h4>
             <p>Place description</p>
             <p>Price</p>
             <p>Owner</p>
@@ -28,14 +28,14 @@
                 <li>Amenity 1</li>
                 <li>Amenity 2</li>
                 <li>Amenity 3</li>
-            </ul>
+            </ul> -->
             <!-- Place details will be populated dynamically -->
         </section>
         <section id="reviews">
-            <div class="review-card"></div>
+            <!-- <div class="review-card"></div>
             <h4>Author</h4>
             <p>Comment</p>
-            <p>rating</p>
+            <p>rating</p> -->
             <!-- Reviews will be populated dynamically -->
         </section>
         <!-- si loggé -->
@@ -44,7 +44,14 @@
             <form id="review-form">
                 <label for="review-text">Review:</label>
                 <textarea id="review-text" name="review-text" required></textarea>
-                
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
                 <button type="submit">Submit</button>
             </form>
         </section>

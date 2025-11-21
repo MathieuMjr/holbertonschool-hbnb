@@ -81,6 +81,15 @@ function displayPlaces(places) {
 // --- SCRIPT -------------------------------------------------------//
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // header include
+  await fetch('header.html')
+  .then(response => response.text())
+  .then(html => {document.querySelector('header').innerHTML = html;});
+  // footer include
+  await fetch('footer.html')
+  .then(r => r.text())
+  .then(html => {document.querySelector('footer').innerHTML = html})
+
   //---CHECK IF LOGGED / LOG BUTTONS AND LINK
   const token = getCookie('token');
   if (token) {
@@ -90,10 +99,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     loginButton.textContent = 'logout';
     loginButton.addEventListener('click', () => {
       document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; samesite=strict"; 
+      loginButton.removeAttribute('href')
       window.location.href = 'index.html';
     })
     loginNav.addEventListener('click', () => {
       document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; samesite=strict"; 
+      loginNav.removeAttribute('href');
       window.location.href = 'index.html';
     })
   }

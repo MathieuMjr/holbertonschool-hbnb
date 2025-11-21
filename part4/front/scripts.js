@@ -1,8 +1,5 @@
-/* 
-  This is a SAMPLE FILE to get you started.
-  Please, follow the project instructions to complete the tasks.
-*/
-
+// FUNCTIONS DEFINITIONS
+// --- Function to fetch place ---------------------
 async function fetchPlaces(token) {
   const response = await fetch('http://localhost:5000/api/v1/places/', {
     method: "GET",
@@ -16,6 +13,7 @@ async function fetchPlaces(token) {
   return await response.json();
 }
 
+// --- Login function ----------------------------------------------
 async function login(payload) {
   const response = await fetch('http://localhost:5000/api/v1/auth/login', {
         method: "POST",
@@ -39,11 +37,12 @@ async function login(payload) {
   return await response.json();
 }
 
+// --- GET COOKIE BY NAME
+function getCookie(name) {
 // chope le cookie par nom, pour un token : mettre token
 // le cookie est uen string avec des infos nom=valeur séparé par des ;
 // on peut extraire l'info qu'on veut du cookie en donnant "nom" à 
 // la fonction
-function getCookie(name) {
   const cookie = document.cookie.split("; ");
   for (const element of cookie) {
     const [key, value] = element.split("=");
@@ -51,6 +50,35 @@ function getCookie(name) {
   }
   return null;
 }
+
+//--- DISPLAY PLACES ----------------------------------------------
+function displayPlaces(places) {
+  const placeSection = document.querySelector('#places-list');
+    places.forEach(place => {
+      const placeCard = document.createElement('div');
+      placeCard.classList.add('place-card');
+      const placeImg = document.createElement('img');
+      placeImg.src = "images/picture.jpg";
+      placeImg.alt = 'picture of the place';
+      placeImg.classList.add('index-place-image');
+      placeCard.appendChild(placeImg);
+      const placeTitle = document.createElement('h4');
+      placeTitle.textContent = place.title;
+      placeCard.appendChild(placeTitle);
+      const placePrice = document.createElement('p');
+      placePrice.textContent = place.price;
+      placeCard.appendChild(placePrice);
+      const placeDetails = document.createElement('a');
+      placeDetails.classList.add('details-button');
+      placeDetails.href='place.html'; //devra envoyer l'id de la place pour affichage spécifique
+      placeDetails.textContent = 'View details'
+      placeCard.appendChild(placeDetails);
+      placeSection.appendChild(placeCard);
+    });
+}
+
+// ------------------------------------------------------------------//
+// --- SCRIPT -------------------------------------------------------//
 
 document.addEventListener('DOMContentLoaded', async () => {
   //---CHECK IF LOGGED / LOG BUTTONS AND LINK
@@ -74,32 +102,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   const places = await fetchPlaces(token);
   if (places) {
     const placeSection = document.querySelector('#places-list');
-    places.forEach(place => {
-      const placeCard = document.createElement('div');
-      placeCard.classList.add('place-card');
-      const placeImg = document.createElement('img');
-      placeImg.src = "images/picture.jpg";
-      placeImg.alt = 'picture of the place';
-      placeImg.classList.add('index-place-image');
-      placeCard.appendChild(placeImg);
-      const placeTitle = document.createElement('h4');
-      placeTitle.textContent = place.title;
-      placeCard.appendChild(placeTitle);
-      const placePrice = document.createElement('p');
-      placePrice.textContent = place.price;
-      placeCard.appendChild(placePrice);
-      const placeDetails = document.createElement('a');
-      placeDetails.classList.add('details-button');
-      placeDetails.href='place.html'; //devra envoyer l'id de la place pour affichage spécifique
-      placeDetails.textContent = 'View details'
-      placeCard.appendChild(placeDetails);
-      placeSection.appendChild(placeCard);
-    });
+    displayPlaces(places);
+    const filter = document.getElementById('price-filter')
+  filter.addEventListener('change', (event) => {
+    const maxPrice = event.target.value === 'all' ? Infinity : Number(event.target.value);
+    placeSection.innerHTML = "";
+    let filteredPlaces = places;
+    filteredPlaces = places.filter(p => p.price <= maxPrice);
+    displayPlaces(filteredPlaces);
+  });
   }
   } catch (error) {
     console.error("Error: ", error)
   }
-  
+
   //---LOGIN----------------------------------------------------------- 
   const loggin = document.querySelector('#login-form')
   const errorText = document.querySelector('#error-text')
@@ -126,7 +142,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
   }
-
-  
 });
 

@@ -1,6 +1,7 @@
+const token = getCookie('token');
 // FUNCTIONS DEFINITIONS
 // --- Function to fetch place ---------------------
-async function fetchPlaces(token) {
+async function fetchPlaces() {
   const response = await fetch('http://localhost:5000/api/v1/places/', {
     method: "GET",
     headers: {
@@ -11,6 +12,65 @@ async function fetchPlaces(token) {
     throw new Error(error.message || 'An error occured while loading Places');
   }
   return await response.json();
+}
+
+// --- Function to fetch place details
+async function fetchPlaceById(id) {
+  const response = await fetch(`http://localhost:5000/api/v1/places/${id}`, {
+        method: "GET",
+        headers: {}
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        if (response.status === 404) {
+          throw new Error(error.message || 'Place not found')
+        }
+        else if (response.status === 500) {
+          throw new Error(error.message || 'Internal server')
+        }
+        else {
+          throw new Error(error.message || "Error")
+        }
+      }
+    return await response.json();
+}
+
+function displayPlaceById(place) {
+  const addReviewSection = document.getElementById('add-review');
+  if (addReviewSection && !token) {
+    addReviewSection.style.display = 'none';
+  };
+  const placeDetailSection = document.querySelector('#place-details');
+  const img = document.createElement('img');
+  img.src = "images/picture.jpg";
+  img.alt = 'some beautiful place';
+  img.classList.add('index-place-image');
+  placeDetailSection.appendChild(img);
+  const title = document.createElement('h2');
+  title.textContent = place.title;
+  placeDetailSection.appendChild(title);
+  const description = document.createElement('p');
+  description.textContent = place.description;
+  placeDetailSection.appendChild(description);
+  const price = document.createElement('p');
+  price.textContent = place.price;
+  placeDetailSection.appendChild(price);
+  const host = document.createElement('p');
+  host.textContent = `Host: ${place.owner.first_name} ${place.owner.last_name}`; // gérer l'affichage nom/prénom
+  placeDetailSection.appendChild(host);
+  if (place.amenities.length > 0) {
+    const amenitiesTitle = document.createElement('h3');
+    amenitiesTitle.textContent = 'Amenities';
+    placeDetailSection.appendChild(amenitiesTitle);
+    const ulist = document.createElement('ul');
+    ulist.classList.add('place-info');
+    for (amenity of place.amenities) {
+      const item = document.createElement('li');
+      item.textContent = amenity.name;
+      ulist.appendChild(item);
+    }
+    placeDetailSection.appendChild(ulist);
+  }
 }
 
 // --- Login function ----------------------------------------------
@@ -70,7 +130,7 @@ function displayPlaces(places) {
       placeCard.appendChild(placePrice);
       const placeDetails = document.createElement('a');
       placeDetails.classList.add('details-button');
-      placeDetails.href='place.html'; //devra envoyer l'id de la place pour affichage spécifique
+      placeDetails.href=`place.html?id=${place.id}`; // $ doit servir à identifier la variable dans la chaine
       placeDetails.textContent = 'View details'
       placeCard.appendChild(placeDetails);
       placeSection.appendChild(placeCard);
@@ -88,10 +148,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // footer include
   await fetch('footer.html')
   .then(r => r.text())
-  .then(html => {document.querySelector('footer').innerHTML = html})
+  .then(html => {document.querySelector('footer').innerHTML = html;});
 
   //---CHECK IF LOGGED / LOG BUTTONS AND LINK
-  const token = getCookie('token');
   if (token) {
     const loginNav = document.getElementById('login-link');
     loginNav.textContent = 'logout';
@@ -110,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   //---FETCH PLACES AND DISPLAY PLACES CARDS
   try {
-  const places = await fetchPlaces(token);
+  const places = await fetchPlaces();
   if (places) {
     const placeSection = document.querySelector('#places-list');
     displayPlaces(places);
@@ -126,6 +185,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error("Error: ", error)
   }
+
+  //--- PLACE DETAILS -------------------------------------------------
+  const placeById = document.querySelector('#place-details');
+  if (placeById) {
+    const parameters = new URLSearchParams(window.location.search);
+    const placeId = parameters.get('id');
+    try {
+      const placeByIdDetails = await fetchPlaceById(placeId);
+      if (placeById) {
+        displayPlaceById(placeByIdDetails);
+      }
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+  };
 
   //---LOGIN----------------------------------------------------------- 
   const loggin = document.querySelector('#login-form')
@@ -145,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const data = await login(payload);
         errorText.textContent = "";
-        document.cookie = "token=" + data.access_token + "; path=/; samesite=strict"; 
+        document.cookie = "token=" + data.access_token + "; path=/; SameSite=strict"; 
         // ajouter "secure" plus tard
         window.location.href = 'index.html';
         } catch (error) {

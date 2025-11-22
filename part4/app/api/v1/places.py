@@ -97,6 +97,7 @@ class PlaceResource(Resource):
             "id": place.id,
             "title": place.title,
             "description": place.description,
+            "price": place.price,
             "latitude": place.latitude,
             "longitude": place.longitude,
             "owner": facade.get_user(place.owner_id).to_dict(),

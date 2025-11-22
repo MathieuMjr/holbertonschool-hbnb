@@ -35,7 +35,27 @@ async function fetchPlaceById(id) {
     return await response.json();
 }
 
-function displayPlaceById(place) {
+async function getUserById(id) {
+  const user = await fetch(`http://localhost:5000/api/v1/users/${id}`, {
+    method: "GET",
+    headers: {}
+  });
+  if (!user.ok) {
+    const error = await user.json();
+    if (response.status === 404) {
+      throw new Error(error.message || 'User not found')
+    }
+    else if (response.status === 500) {
+      throw new Error(error.message || 'Internal server')
+    }
+    else {
+      throw new Error(error.message || "Error")
+    }
+  }
+  return await user.json();
+}
+
+async function displayPlaceById(place) {
   const addReviewSection = document.getElementById('add-review');
   if (addReviewSection && !token) {
     addReviewSection.style.display = 'none';
@@ -49,27 +69,43 @@ function displayPlaceById(place) {
   const title = document.createElement('h2');
   title.textContent = place.title;
   placeDetailSection.appendChild(title);
+  const host = document.createElement('p');
+  host.textContent = `Host: ${place.owner.first_name} ${place.owner.last_name}`; // gérer l'affichage nom/prénom
+  placeDetailSection.appendChild(host);
   const description = document.createElement('p');
   description.textContent = place.description;
   placeDetailSection.appendChild(description);
   const price = document.createElement('p');
-  price.textContent = place.price;
+  price.textContent = `Price: ${place.price}`;
   placeDetailSection.appendChild(price);
-  const host = document.createElement('p');
-  host.textContent = `Host: ${place.owner.first_name} ${place.owner.last_name}`; // gérer l'affichage nom/prénom
-  placeDetailSection.appendChild(host);
   if (place.amenities.length > 0) {
     const amenitiesTitle = document.createElement('h3');
     amenitiesTitle.textContent = 'Amenities';
     placeDetailSection.appendChild(amenitiesTitle);
     const ulist = document.createElement('ul');
     ulist.classList.add('place-info');
-    for (amenity of place.amenities) {
+    for (const amenity of place.amenities) {
       const item = document.createElement('li');
       item.textContent = amenity.name;
       ulist.appendChild(item);
     }
     placeDetailSection.appendChild(ulist);
+  }
+  const reviewSection = document.getElementById('reviews');
+  for (const review of place.reviews) {
+    user = await getUserById(review.user_id);
+    const reviewCard = document.createElement('div');
+    reviewCard.classList.add('review-card');
+    const author = document.createElement('h4');
+    author.textContent = `${user.first_name} ${user.last_name}`;
+    reviewCard.appendChild(author);
+    const comment = document.createElement('p');
+    comment.textContent = review.comment;
+    reviewCard.appendChild(comment);
+    const rating = document.createElement('p');
+    rating.textContent = `${review.rating}/5`;
+    reviewCard.appendChild(rating);
+    reviewSection.appendChild(reviewCard);
   }
 }
 

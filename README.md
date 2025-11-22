@@ -20,4 +20,9 @@ Four object have been created : user, place, amenity, review. All inherit from a
 
 API routes handle the CRUDS operations (except DELETE operations that only review object can handle) and return the apropriate status code. 
 
-## Work is still in progress, more content will come as the project goes further o/ 
+## 3. Implementing authentication, JWT access, Admin privileges and remove InMemory Repository to a SQLite database
+In part 3, we've implemented authentication and authorization. Some API routes are now protected and only some user can perform some specific CRUD operations. Administrators have some privileges too. 
+
+We've also replaced our classes to SQLAlchemy models, making our objects persistent on a SQLite database. 
+
+## Work is still in progress, more content will come as the project goes further o/

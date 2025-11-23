@@ -133,6 +133,25 @@ async function login(payload) {
   return await response.json();
 }
 
+// --- Post Review :
+async function postReview(payload, token) {
+  const response = await fetch('http://localhost:5000/api/v1/reviews/', {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers:{
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || data.error || 'Error')
+    }
+  return data;
+  }
+
 // --- GET COOKIE BY NAME
 function getCookie(name) {
 // chope le cookie par nom, pour un token : mettre token
@@ -204,23 +223,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
   }
   //---FETCH PLACES AND DISPLAY PLACES CARDS
-  try {
-  const places = await fetchPlaces();
-  if (places) {
-    const placeSection = document.querySelector('#places-list');
-    displayPlaces(places);
-    const filter = document.getElementById('price-filter')
-  filter.addEventListener('change', (event) => {
-    const maxPrice = event.target.value === 'all' ? Infinity : Number(event.target.value);
-    placeSection.innerHTML = "";
-    let filteredPlaces = places;
-    filteredPlaces = places.filter(p => p.price <= maxPrice);
-    displayPlaces(filteredPlaces);
-  });
-  }
-  } catch (error) {
-    console.error("Error: ", error)
-  }
+  const placeList = document.getElementById('places-list');
+  if (placeList) {
+    try {
+    const places = await fetchPlaces();
+    if (places) {
+      const placeSection = document.querySelector('#places-list');
+      displayPlaces(places);
+      const filter = document.getElementById('price-filter')
+    filter.addEventListener('change', (event) => {
+      const maxPrice = event.target.value === 'all' ? Infinity : Number(event.target.value);
+      placeSection.innerHTML = "";
+      let filteredPlaces = places;
+      filteredPlaces = places.filter(p => p.price <= maxPrice);
+      displayPlaces(filteredPlaces);
+    });
+    }
+    } catch (error) {
+      console.error("Error: ", error)
+    }
+    }
 
   //--- PLACE DETAILS -------------------------------------------------
   const placeById = document.querySelector('#place-details');
@@ -236,6 +258,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Error: ", error);
       }
   };
+
+  const reviewForm = document.querySelector('#review-form');
+  if (reviewForm) {
+    reviewForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const comment = document.getElementById('review-text').value;
+    const rating = document.getElementById('rating').value;
+    const parameters = new URLSearchParams(window.location.search);
+    const payloadReview = {
+      "comment": comment,
+      "rating": parseInt(rating),
+      "place_id": parameters.get('id')
+    };
+    const responseP = document.getElementById('response');
+    try {
+      const response = await postReview(payloadReview, token);
+      responseP.textContent = "Review successfully submitted";
+      responseP.style.color = 'green';
+    } catch (error) {
+      responseP.textContent = error.message;
+      responseP.style.color = 'red';
+      console.error("Error: ", error);
+    }
+  })
+  };
+  
 
   //---LOGIN----------------------------------------------------------- 
   const loggin = document.querySelector('#login-form')

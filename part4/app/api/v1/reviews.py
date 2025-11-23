@@ -9,7 +9,7 @@ review_model = api.model('Review', {
     'comment': fields.String(required=True, description='Text of the review'),
     'rating': fields.Integer(
         required=True, description='Rating of the place (1-5)'),
-    'user_id': fields.String(required=True, description='ID of the user'),
+    'user_id': fields.String(required=False, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
@@ -38,6 +38,8 @@ class ReviewList(Resource):
             if datas["place_id"] == review.place_id:
                 return {"error": "You have already reviewed this place."}, 400
         try:
+            if 'user_id' not in datas:
+                datas['user_id'] = current_user['id']
             review = facade.create_review(datas)
         except ValueError as e:
             return {"error": str(e)}, 400

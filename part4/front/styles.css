@@ -1,0 +1,186 @@
+/* 
+  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
+  You'll probably need to override some of theese styles.
+*/
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    display: flex;
+    background-color: lightgray;
+    color:#333;
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login-button {
+    display: flex;
+    border: 1px, solid, white;
+    margin-right: 2rem;
+    text-decoration: none;
+    padding: 10px;
+    margin: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: white;
+    font-weight: bold;
+}
+
+nav {
+    display: flex;
+    gap: 2rem;
+}
+
+nav a {
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+}
+
+#login-form {
+    color: white;
+    width: 350px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(196, 4, 52);
+    gap: 1rem;
+    padding: 2rem;
+    margin-top: 3rem;
+
+    border-radius: 12px;
+}
+
+#login-form  label{
+
+    margin: 10px;
+    font-weight: bold;
+    font-size: 1rem;
+    
+}
+
+#login-form button {
+    font-weight: bold;
+    font-size: 400;
+    padding: 5px 10px;
+    margin-top: 1rem;
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: white;
+    color: rgb(196, 4, 52);
+}
+
+#login-form h2 {
+    text-align: center;
+    font-size:2.5rem;
+    font-weight: bolder;
+}
+
+#filter {
+    text-align: center;
+}
+
+#filter h2 {
+    margin: 1rem;
+}
+
+#places-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.place-card, .review-card {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.index-place-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}   
+
+#place-details p {
+    margin-left: 2rem;
+}
+
+#place-details {
+    width: 850px;
+    margin: auto;
+}
+
+#place-details img {
+    border-radius: 12px;
+    margin-bottom: 20px;
+    height: 400px;
+}
+
+.place-info {
+    margin-left: 2rem;
+}
+
+#reviews {
+    width: 850px;
+    margin: auto;
+    margin-top: 20px;
+}
+
+#reviews h2 {
+    margin-bottom: 1,5rem;
+}
+
+.review-card {
+    width : 500px;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+#error-text{
+    color: red;
+}
+
+footer {
+    background-color: #333;
+    padding: 3rem;
+}
+
+.copyright{
+    margin-left: 2rem;
+    color: white;
+    font-weight: 200;
+}
